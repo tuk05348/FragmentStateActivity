@@ -15,6 +15,7 @@ class DiceFragment : Fragment() {
     private var sides: Int? = null
     private val CURRENT_DIE_ROLL_KEY: String = "currentDieRoll"
     private var currentDieRoll = 0
+    lateinit var numberDisplayTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,12 +30,28 @@ class DiceFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_dice, container, false).apply {
 
-            val numberDisplayTextView = findViewById<TextView>(R.id.numberDisplay)
+            numberDisplayTextView = findViewById<TextView>(R.id.numberDisplay)
             findViewById<Button>(R.id.rollButton).setOnClickListener {
                 currentDieRoll = Random.nextInt(sides!!) + 1
                 numberDisplayTextView.text = (currentDieRoll).toString()
 
             }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        savedInstanceState?.run {
+            currentDieRoll = getInt(CURRENT_DIE_ROLL_KEY, 0)
+        }
+
+        if (currentDieRoll == 0) {
+            currentDieRoll = Random.nextInt(sides!!) + 1
+            numberDisplayTextView.text = (currentDieRoll).toString()
+        }
+        else {
+            numberDisplayTextView.text = (currentDieRoll).toString()
         }
     }
 
